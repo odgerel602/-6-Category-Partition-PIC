@@ -1,0 +1,14 @@
+From:      Valid, Frozen, Missing
+To:        Valid, Missing, SameAsFrom
+Amount:    Normal, Zero, EqualBalance, OverBalance, OverLimit, EqualLimit
+Currency:  Same, Different
+LimitUsed: None, Partial
+
+# A2-ын хязгаарлалт: [ERROR] утга бусад алдаатай нэг мөрөнд орохгүй
+IF [From] <> "Valid" THEN [To] = "Valid" AND [Amount] = "Normal";
+IF [To] <> "Valid" THEN [From] = "Valid" AND [Amount] = "Normal";
+IF [Amount] IN {"Zero", "OverBalance", "OverLimit"} THEN [From] = "Valid" AND [To] = "Valid";
+# [SINGLE] хил утгууд хүчинтэй данстай л хослоно
+IF [Amount] IN {"EqualBalance", "EqualLimit"} THEN [From] = "Valid" AND [To] = "Valid";
+# Үлдсэн лимит рүү хүрэхийн тулд лимит хэсэгчлэн ашиглагдсан байх ёстой
+IF [Amount] IN {"OverLimit", "EqualLimit"} THEN [LimitUsed] = "Partial";
